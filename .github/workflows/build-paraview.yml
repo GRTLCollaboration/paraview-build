@@ -1,0 +1,40 @@
+name: Build ParaView (Catalyst Rendering edition)
+
+on: [push]
+
+jobs:
+  build-paraview:
+    name: Build ParaView (Catalyst Rendering edition)
+    runs-on: ubuntu-20.04
+    env:
+      PARAVIEW_DIR: ${{ github.workspace }}/paraview_build
+
+    steps:
+    - name: Checkout ParaView
+      uses: actions/checkout@v2
+      with:
+        repository: Kitware/ParaView
+        path: paraview
+        ref: release
+        submodules: recursive
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install build-essential libgl1-mesa-dev \
+        libxt-dev python3-dev python3-numpy libopenmpi-dev libtbb-dev \
+        ninja-build libosmesa6 libosmesa6-dev
+
+    - name: Configure
+      run: |
+        mkdir $PARAVIEW_DIR
+        cd $PARAVIEW_DIR
+        cmake -GNinja -DPARAVIEW_BUILD_EDITION=CATALYST_RENDERING \
+        -DPARAVIEW_USE_QT=OFF -DVTK_USE_X=OFF -DVTK_OPENGL_HAS_OSMESA=ON \
+        -DPARAVIEW_USE_PYTHON=ON -DPARAVIEW_USE_MPI=ON -DPARAVIEW_USE_VTKM=OFF \
+        -DPARAVIEW_USE_FORTRAN=OFF -DCMAKE_BUILD_TYPE=RelWithDebInfo ../paraview
+
+    - name: Build
+      run: ninja
+      working-directory: ${{ env.PARAVIEW_DIR }}
+
