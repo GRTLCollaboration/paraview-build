@@ -1,14 +1,15 @@
-name: Build ParaView
+name: Build and release ParaView
 
 on: [push]
 
+env:
+  PARAVIEW_SUPERBUILD_DIR: ${{ github.workspace }}/build
+  PARAVIEW_VERSION: 5.10.1
+
 jobs:
   build-paraview:
-    name: Build ParaView-Superbuild
+    name: Build ParaView Superbuild
     runs-on: ubuntu-20.04
-    env:
-      PARAVIEW_SUPERBUILD_DIR: ${{ github.workspace }}/build
-      PARAVIEW_VERSION: 5.10.0
 
     steps:
     - name: Checkout ParaView
@@ -37,12 +38,32 @@ jobs:
       working-directory: ${{ env.PARAVIEW_SUPERBUILD_DIR }}
 
     - name: Package
-      run: ctest -R cpack
+      run: tar -czvf paraview-v${PARAVIEW_VERSION}.tar.gz $PARAVIEW_SUPERBUILD_DIR/install
       working-directory: ${{ env.PARAVIEW_SUPERBUILD_DIR }}
 
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
-        name: paraview
-        path: ${{ env.PARAVIEW_SUPERBUILD_DIR }}/*.tar.gz
+        name: paraview-v${{ env.PARAVIEW_VERSION }}
+        path: ${{ env.PARAVIEW_SUPERBUILD_DIR }}/paraview-v${{ env.PARAVIEW_VERSION }}.tar.gz
+
+  release-paraview:
+    needs: build-paraview
+    if: ${{ github.ref_type }} == 'tag' && startsWith(${{ github.ref_name }}, 'v')
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download package
+        uses: actions/download-artifact@v3
+        with:
+          name: paraview-v${{ env.PARAVIEW_VERSION }}
+
+      - name: Make release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "paraview-v${{ env.PARAVIEW_VERSION }}.tar.gz"
+
+
 
