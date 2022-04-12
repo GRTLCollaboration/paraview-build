@@ -38,8 +38,7 @@ jobs:
       working-directory: ${{ env.PARAVIEW_SUPERBUILD_DIR }}
 
     - name: Package
-      run: tar -czvf paraview-v${PARAVIEW_VERSION}.tar.gz .
-      working-directory: ${{ env.PARAVIEW_SUPERBUILD_DIR }}/install
+      run: tar -czvf paraview-v${PARAVIEW_VERSION}.tar.gz -C $PARAVIEW_SUPERBUILD_DIR/install .
 
     - name: Upload package
       uses: actions/upload-artifact@v2
@@ -64,6 +63,3 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: "paraview-v${{ env.PARAVIEW_VERSION }}.tar.gz"
-
-
-
