@@ -44,9 +44,11 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: paraview-v${{ env.PARAVIEW_VERSION }}
-        path: ${{ env.PARAVIEW_SUPERBUILD_DIR }}/paraview-v${{ env.PARAVIEW_VERSION }}.tar.gz
+        path: paraview-v${{ env.PARAVIEW_VERSION }}.tar.gz
+        if-no-files-found: error
 
   release-paraview:
+    name: Create release and add build to it
     needs: build-paraview
     if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
     runs-on: ubuntu-20.04
