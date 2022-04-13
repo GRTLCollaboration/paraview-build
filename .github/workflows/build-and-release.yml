@@ -57,13 +57,10 @@ jobs:
         path: paraview-v${{ env.PARAVIEW_VERSION }}.tar.gz
         if-no-files-found: error
 
-  release-paraview:
-    name: Create release
+  test-paraview-config:
+    name: Test paraview-config
     needs: build-paraview
-    if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
     runs-on: ubuntu-20.04
-    permissions:
-      contents: write
 
     steps:
       - name: Download package
@@ -71,7 +68,14 @@ jobs:
         with:
           name: paraview-v${{ env.PARAVIEW_VERSION }}
 
-      - name: Make release
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "paraview-v${{ env.PARAVIEW_VERSION }}.tar.gz"
+      - name: Untar
+        run: tar -xzvf paraview-v${PARAVIEW_VERSION}.tar.gz
+
+      - name: Test paraview-config
+        run: |
+          ./paraview-config --cppflags -v CommonDataModel -v PythonUsed
+          ./paraview-config --ldflags -v CommonDataModel -v PythonUsed
+          ./paraview-config --cppflags -c PythonCatalyst
+          ./paraview-config --ldflags -c PythonCatalyst
+        working-directory: bin
+
