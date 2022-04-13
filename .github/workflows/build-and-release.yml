@@ -27,11 +27,20 @@ jobs:
       run: |
         mkdir $PARAVIEW_SUPERBUILD_DIR
         cd $PARAVIEW_SUPERBUILD_DIR
-        cmake -GNinja -DPARAVIEW_BUILD_EDITION=CATALYST_RENDERING \
-        -DENABLE_osmesa=ON -DUSE_SYSTEM_osmesa=ON -DUSE_SYSTEM_python3=ON \
-        -DUSE_SYSTEM_mpi=ON -DUSE_SYSTEM_llvm=ON \
+        cmake \
+        -GNinja \
+        -DPARAVIEW_BUILD_EDITION=CATALYST_RENDERING \
+        -DENABLE_osmesa=ON \
+        -DUSE_SYSTEM_osmesa=ON \
+        -DENABLE_python3=ON \
+        -DUSE_SYSTEM_python3=ON \
+        -DENABLE_mpi=ON \
+        -DUSE_SYSTEM_mpi=ON \
+        -DENABLE_llvm=ON \
+        -DUSE_SYSTEM_llvm=ON \
         -Dparaview_SOURCE_SELECTION=${PARAVIEW_VERSION} \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo $GITHUB_WORKSPACE/paraview-superbuild
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        $GITHUB_WORKSPACE/paraview-superbuild
 
     - name: Build
       run: ninja
@@ -48,7 +57,7 @@ jobs:
         if-no-files-found: error
 
   release-paraview:
-    name: Create release and add build to it
+    name: Create release
     needs: build-paraview
     if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v')
     runs-on: ubuntu-20.04
