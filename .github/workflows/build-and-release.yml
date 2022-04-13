@@ -71,6 +71,14 @@ jobs:
       - name: Untar
         run: tar -xzvf paraview-v${PARAVIEW_VERSION}.tar.gz
 
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install build-essential libgl1-mesa-dev \
+          libxt-dev python3-dev python3-numpy libopenmpi-dev libtbb-dev \
+          ninja-build libosmesa6 libosmesa6-dev llvm-12-dev
+          sudo update-alternatives --install /usr/bin/llvm-config llvm-config /usr/bin/llvm-config-12 12
+
       - name: Test paraview-config
         run: |
           ./paraview-config --cppflags -v CommonDataModel -v PythonUsed
