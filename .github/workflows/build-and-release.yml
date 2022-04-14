@@ -82,7 +82,7 @@ jobs:
 
       - name: Untar
         run: |
-          mkdir $PARAVIEW_SUPERBUILD_DIR/install
+          mkdir -p $PARAVIEW_SUPERBUILD_DIR/install
           cd $PARAVIEW_SUPERBUILD_DIR/install
           tar -xzvf $GITHUB_WORKSPACE/paraview-v${PARAVIEW_VERSION}.tar.gz
 
