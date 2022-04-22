@@ -19,10 +19,10 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          wget https://github.com/Kitware/CMake/releases/download/v3.21.6/cmake-3.21.6-linux-x86_64.sh
-          chmod +x cmake-3.21.6-linux-x86_64.sh
-          sudo ./cmake-3.21.6-linux-x86_64.sh --prefix=/usr/local --exclude-subdir
-          cmake --version
+          # wget https://github.com/Kitware/CMake/releases/download/v3.21.6/cmake-3.21.6-linux-x86_64.sh
+          # chmod +x cmake-3.21.6-linux-x86_64.sh
+          # sudo ./cmake-3.21.6-linux-x86_64.sh --prefix=/usr/local --exclude-subdir
+          # cmake --version
           sudo apt-get -y install build-essential libgl1-mesa-dev \
           libxt-dev python3-dev python3-numpy libopenmpi-dev libtbb-dev \
           ninja-build libosmesa6 libosmesa6-dev llvm-12-dev
@@ -50,14 +50,6 @@ jobs:
       - name: Build
         run: ninja
         working-directory: ${{ env.PARAVIEW_SUPERBUILD_DIR }}
-
-      - name: Test paraview-config
-        run: |
-          ./paraview-config --cppflags -v CommonDataModel -v PythonUsed
-          ./paraview-config --ldflags -v CommonDataModel -v PythonUsed
-          ./paraview-config --cppflags -c PythonCatalyst
-          ./paraview-config --ldflags -c PythonCatalyst
-        working-directory: ${{ env.PARAVIEW_SUPERBUILD_DIR }}/install/bin
 
       - name: Package
         run: tar -czvf paraview-v${PARAVIEW_VERSION}.tar.gz -C $PARAVIEW_SUPERBUILD_DIR/install .
