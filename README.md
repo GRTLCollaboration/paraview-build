@@ -1,4 +1,8 @@
 # paraview-build
+
+[![GitHub version](https://badge.fury.io/gh/GRChombo%2Fparaview-build.svg)](https://badge.fury.io/gh/GRChombo%2Fparaview-build)
+![Build and release action](https://github.com/GRChombo/paraview-build/actions/workflows/build-and-release.yml/badge.svg)
+
 A repository with a GitHub action to build and package[^1]
 [ParaView](https://github.com/Kitware/ParaView) using the
 [Superbuild](https://gitlab.kitware.com/paraview/paraview-superbuild) on the
