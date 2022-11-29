@@ -51,7 +51,7 @@ jobs:
         run: tar -czvf paraview-v${PARAVIEW_VERSION}.tar.gz -C $PARAVIEW_SUPERBUILD_DIR/install .
 
       - name: Upload package
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: paraview-v${{ env.PARAVIEW_VERSION }}
           path: paraview-v${{ env.PARAVIEW_VERSION }}.tar.gz
