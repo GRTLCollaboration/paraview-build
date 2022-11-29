@@ -4,7 +4,7 @@ on: [push]
 
 env:
   PARAVIEW_SUPERBUILD_DIR: ${{ github.workspace }}/build
-  PARAVIEW_VERSION: 5.10.1
+  PARAVIEW_VERSION: 5.11.0
 
 jobs:
   build-paraview:
