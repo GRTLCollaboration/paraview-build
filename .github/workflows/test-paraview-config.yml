@@ -1,0 +1,48 @@
+name: Test paraview-config
+
+on: [push]
+
+env:
+  PARAVIEW_SUPERBUILD_DIR: ${{ github.workspace }}/build
+  PARAVIEW_DIR: ${{ github.workspace }}/build/install
+
+jobs:
+  test-paraview-config:
+    name: Test paraview-config
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Download pre-built ParaView
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          repo: "GRChombo/paraview-build"
+          version: latest
+          regex: true
+          file: "paraview-v.*.tar.gz"
+
+      - name: Untar ParaView
+        run: |
+          mkdir -p $PARAVIEW_DIR
+          cd $PARAVIEW_DIR
+          tar -xzvf $GITHUB_WORKSPACE/paraview-v*.tar.gz
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install build-essential libgl1-mesa-dev \
+          libxt-dev python3-dev python3-numpy libopenmpi-dev libtbb-dev \
+          ninja-build libosmesa6 libosmesa6-dev llvm-12-dev
+          sudo update-alternatives --install /usr/bin/llvm-config llvm-config
+          /usr/bin/llvm-config-12 12
+          
+      - name: Print CMake version
+        run: cmake --version
+
+      - name: Test paraview-config
+        run: |
+          ./paraview-config --cppflags -v CommonDataModel -v PythonUsed -v ParallelCore -v FiltersAMR -v IOParallelXML
+          ./paraview-config --ldflags -v CommonDataModel -v PythonUsed -v ParallelCore -v FiltersAMR -v IOParallelXML
+          ./paraview-config --cppflags -c PythonCatalyst
+          ./paraview-config --ldflags -c PythonCatalyst
+        working-directory: ${{ env.PARAVIEW_DIR }}/bin
+
