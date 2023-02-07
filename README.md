@@ -6,11 +6,11 @@
 A repository with a GitHub action to build and package[^1]
 [ParaView](https://github.com/Kitware/ParaView) using the
 [Superbuild](https://gitlab.kitware.com/paraview/paraview-superbuild) on the
-Ubuntu 20.04 GitHub action runners.
+Ubuntu 22.04 GitHub action runners.
 
 The build is/will be used in the GitHub action which tests the [ParaView
 Catalyst](https://www.paraview.org/in-situ/) instrumentation in GRChombo. It is
-built against the Ubuntu 20.04 system libraries so is unlikely to work on other
+built against the Ubuntu 22.04 system libraries so is unlikely to work on other
 Linux distributions with different library/package versions.
 
 The build has the following features:
